@@ -326,9 +326,11 @@ static int init_mem_pool(void) {
       pktmbuf_pool[socketid] =
           rte_pktmbuf_pool_create(s, nb_mbuf, MEMPOOL_CACHE_SIZE, 0,
                                   RTE_MBUF_DEFAULT_BUF_SIZE, socketid);
+      printf("Init mem, after create pool: nb_mbuf:%s %u\n",s, nb_mbuf);
     } else {
       snprintf(s, sizeof(s), "mbuf_pool_%d", socketid);
       pktmbuf_pool[socketid] = rte_mempool_lookup(s);
+      printf("Init mem, lookup: %s %u\n", s, nb_mbuf);
     }
 
     if (pktmbuf_pool[socketid] == NULL) {
