@@ -134,12 +134,14 @@ rte_pktmbuf_pool_create_by_ops(const char *name, unsigned int n,
 
 	mp = rte_mempool_create_empty(name, n, elt_size, cache_size,
 		 sizeof(struct rte_pktmbuf_pool_private), socket_id, 0);
+	printf("RTE mempool create empty: %p\n", mp);
 	if (mp == NULL)
 		return NULL;
 
 	if (mp_ops_name == NULL)
 		mp_ops_name = rte_mbuf_best_mempool_ops();
 	ret = rte_mempool_set_ops_byname(mp, mp_ops_name, NULL);
+	printf("RTE mempool set ops byname %s %d\n",mp_ops_name, ret);
 	if (ret != 0) {
 		RTE_LOG(ERR, MBUF, "error setting mempool handler\n");
 		rte_mempool_free(mp);
@@ -149,6 +151,7 @@ rte_pktmbuf_pool_create_by_ops(const char *name, unsigned int n,
 	rte_pktmbuf_pool_init(mp, &mbp_priv);
 
 	ret = rte_mempool_populate_default(mp);
+	printf("RTE mempool populate default: %d\n", ret);
 	if (ret < 0) {
 		rte_mempool_free(mp);
 		rte_errno = -ret;
