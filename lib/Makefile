@@ -14,11 +14,12 @@ S=${TOPDIR}/freebsd
 MACHINE_INCLUDES_ROOT:=${CURDIR}/machine_include
 OVERRIDE_INCLUDES_ROOT:=${CURDIR}/include
 X86_INCLUDES=0
-PREFIX=/usr/local
+PREFIX ?=/usr/local
 PREFIX_LIB=${PREFIX}/lib
-PREFIX_INCLUDE=/usr/local/include
-PREFIX_BIN=/usr/local/bin
-F-STACK_CONF=/etc/f-stack.conf
+PREFIX_INCLUDE=${PREFIX}/include
+PREFIX_BIN=${PREFIX}/bin
+SYSCONF ?= /etc
+F-STACK_CONF=${SYSCONF}/f-stack.conf
 F-STACK_VERSION=1.21
 TGT_OS=$(shell uname)
 ifeq ($(TGT_OS),FreeBSD)
@@ -27,7 +28,7 @@ endif
 
 HOST_OS:=$(shell uname -s)
 
-#DEBUG=-O0 -gdwarf-2 -g3 -Wno-format-truncation
+DEBUG=-O0 -gdwarf-2 -g3 -Wno-format-truncation
 
 # No DPDK KNI support on FreeBSD
 ifneq ($(TGT_OS),FreeBSD)
@@ -65,7 +66,7 @@ endif
 endif
 
 DPDK_CFLAGS= -Wall -Wno-deprecated-declarations -Werror -include ${FF_DPDK}/include/rte_config.h
-DPDK_CFLAGS+= -march=native -DRTE_MACHINE_CPUFLAG_SSE -DRTE_MACHINE_CPUFLAG_SSE2 -DRTE_MACHINE_CPUFLAG_SSE3
+DPDK_CFLAGS+= -DRTE_MACHINE_CPUFLAG_SSE -DRTE_MACHINE_CPUFLAG_SSE2 -DRTE_MACHINE_CPUFLAG_SSE3
 DPDK_CFLAGS+= -DRTE_MACHINE_CPUFLAG_SSSE3 -DRTE_MACHINE_CPUFLAG_SSE4_1 -DRTE_MACHINE_CPUFLAG_SSE4_2
 DPDK_CFLAGS+= -DRTE_COMPILE_TIME_CPUFLAGS=RTE_CPUFLAG_SSE,RTE_CPUFLAG_SSE2,RTE_CPUFLAG_SSE3,RTE_CPUFLAG_SSSE3,RTE_CPUFLAG_SSE4_1,RTE_CPUFLAG_SSE4_2
 DPDK_CFLAGS+= -I${FF_DPDK}/include
@@ -139,7 +140,7 @@ ifeq "$(GCCVERGE11)" "1"
     CFLAGS+= -Wno-error=stringop-overread
 endif
 
-HOST_C= ${CC} -c $(HOST_CFLAGS) ${HOST_INCLUDES} ${WERROR} ${PROF} $<
+HOST_C= ${CC} -c $(HOST_CFLAGS) ${HOST_INCLUDES} ${PROF} $<
 
 
 ifneq ($(filter amd64 i386,${MACHINE_CPUARCH}),)
@@ -643,12 +644,12 @@ all: libfstack.a
 #
 libfstack.a: machine_includes ff_api.symlist ${MHEADERS} ${MSRCS} ${HOST_OBJS} ${ASM_OBJS} ${OBJS}
 	${LD} -d -r -o $*.ro ${ASM_OBJS} ${OBJS}
-	nm $*.ro  | grep -v ' U ' | cut -d ' ' -f 3 > $*_localize_list.tmp
-	objcopy --localize-symbols=$*_localize_list.tmp $*.ro
+	${NM} $*.ro  | grep -v ' U ' | cut -d ' ' -f 3 > $*_localize_list.tmp
+	${OBJCOPY} --localize-symbols=$*_localize_list.tmp $*.ro
 	rm $*_localize_list.tmp
-	objcopy --globalize-symbols=ff_api.symlist $*.ro
+	${OBJCOPY} --globalize-symbols=ff_api.symlist $*.ro
 	rm -f $@
-	ar -cqs $@ $*.ro ${HOST_OBJS}
+	${AR} -cqs $@ $*.ro ${HOST_OBJS}
 	rm -f $*.ro
 
 ${HOST_OBJS}: %.o: %.c
