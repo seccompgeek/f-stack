@@ -1009,9 +1009,8 @@ dpdk_args_setup(struct ff_config *cfg)
 
     if (cfg->dpdk.nb_vdev) {
         for (i=0; i<cfg->dpdk.nb_vdev; i++) {
-            sprintf(temp, "--vdev=virtio_user%d,path=%s",
-                cfg->dpdk.vdev_cfgs[i].vdev_id,
-                cfg->dpdk.vdev_cfgs[i].path);
+            sprintf(temp, "--vdev=net_ring%d",
+                cfg->dpdk.vdev_cfgs[i].vdev_id);
             if (cfg->dpdk.vdev_cfgs[i].nb_queues) {
                 sprintf(temp2, ",queues=%u",
                     cfg->dpdk.vdev_cfgs[i].nb_queues);
