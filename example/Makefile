@@ -8,9 +8,16 @@ ifeq ($(FF_DPDK),)
 	FF_DPDK=${TOPDIR}/dpdk/x86_64-native-linuxapp-gcc
 endif
 
+DPDK_PC_PATH ?= $(FF_DPDK)/lib/pkgconfig
+PKGCFG := PKG_CONFIG_SYSROOT_DIR=$(SYSROOT) PKG_CONFIG_LIBDIR=$(DPDK_PC_PATH) pkg-config
+LIBDPDK_LIBS := $(shell $(PKGCFG) --libs --static libdpdk)
+LIBS += -L${FF_DPDK}/lib -Wl,--whole-archive $(LIBDPDK_LIBS) -Wl,--no-whole-archive
+
 LIBS+= -L${FF_PATH}/lib -Wl,--whole-archive,-lfstack,--no-whole-archive
-LIBS+= -L${FF_DPDK}/lib -Wl,--whole-archive,-ldpdk,--no-whole-archive
+#LIBS+= -L${FF_DPDK}/lib -Wl,--whole-archive,-ldpdk,--no-whole-archive
 LIBS+= -Wl,--no-whole-archive -lrt -lm -ldl -lcrypto -pthread -lnuma
+
+CC ?= cc
 
 TARGET="helloworld"
 all:
