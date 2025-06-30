@@ -123,6 +123,7 @@ rte_pktmbuf_pool_create_by_ops(const char *name, unsigned int n,
 		RTE_LOG(ERR, MBUF, "mbuf priv_size=%u is not aligned\n",
 			priv_size);
 		rte_errno = EINVAL;
+		printf("Pool create priv_size not aligned\n");
 		return NULL;
 	}
 	elt_size = sizeof(struct rte_mbuf) + (unsigned)priv_size +

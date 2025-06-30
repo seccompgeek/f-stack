@@ -95,6 +95,8 @@ rte_eal_hugepage_init(void)
 		msl->socket_id = 0;
 		msl->heap = 1;
 
+		printf("Allocated memory: address %p length 0x%lx\n", addr, (unsigned long)internal_config.memory);
+
 		/* populate memsegs. each memseg is 1 page long */
 		for (cur_seg = 0; cur_seg < n_segs; cur_seg++) {
 			arr = &msl->memseg_arr;
