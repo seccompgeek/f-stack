@@ -196,6 +196,7 @@ HACK_EXTRA_FLAGS+=${EXTRA_FLAGS} $(ARCH_FLAGS)
 endif
 
 CFLAGS+= -DFSTACK
+CFLAGS+= -Wno-error=builtin-macro-redefined -Wno-builtin-macro-redefined -Wno-error=maybe-uninitialized
 
 ifdef FF_ZC_SEND
 CFLAGS+= -DFSTACK_ZC_SEND
