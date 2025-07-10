@@ -23,6 +23,7 @@ TARGET="helloworld"
 all:
 	${CC} -O -gdwarf-2  -I../lib -DINET6 -o ${TARGET} main.c ${LIBS}
 	${CC} -O -gdwarf-2  -I../lib -o ${TARGET}_epoll main_epoll.c ${LIBS}
+	${CC} -O -gdwarf-2 	-I../lib -o fstack-pfe fstack-pfe.c ${LIBS}
 
 .PHONY: clean
 clean:
