@@ -132,7 +132,7 @@ ff_freebsd_init(void)
     if (error != 0) {
         panic("kern_setenv failed: kern.hz=%s\n", tmpbuf);
     }
-
+    printf("before loop\n");
     struct ff_freebsd_cfg *cur;
     cur = ff_global_cfg.freebsd.boot;
     while (cur) {
@@ -143,24 +143,24 @@ ff_freebsd_init(void)
 
         cur = cur->next;
     }
-
+    printf("after loop\n");
     physmem = ff_global_cfg.freebsd.physmem;
 
     pcpup = malloc(sizeof(struct pcpu), M_DEVBUF, M_ZERO);
     pcpu_init(pcpup, 0, sizeof(struct pcpu));
     CPU_SET(0, &all_cpus);
-
+    printf("before thread init\n");
     ff_init_thread0();
-
+    printf("after thread init\n");
     boot_pages = 16;
     bootmem = (void *)kmem_malloc(NULL, boot_pages*PAGE_SIZE, M_ZERO);
     uma_startup(bootmem, boot_pages);
     uma_startup2();
-
+    printf("after startup\n");
     num_hash_buckets = 8192;
     uma_page_slab_hash = (struct uma_page_head *)kmem_malloc(NULL, sizeof(struct uma_page)*num_hash_buckets, M_ZERO);
     uma_page_mask = num_hash_buckets - 1;
-
+    printf("after buckets\n");
     mutex_init();
     mi_startup();
     sx_init(&proctree_lock, "proctree");
