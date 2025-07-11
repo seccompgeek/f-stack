@@ -86,6 +86,7 @@ __FBSDID("$FreeBSD$");
 
 #include <ddb/ddb.h>
 #include <ddb/db_sym.h>
+#include <stdio.h>
 
 void mi_startup(void); /* Should be elsewhere */
 
@@ -181,7 +182,7 @@ mi_startup(void)
     int last;
     int verbose;
 #endif
-
+    printf("in mi_startup\n");
     if (sysinit == NULL) {        
         sysinit = SET_BEGIN(sysinit_set);
         sysinit_end = SET_LIMIT(sysinit_set);
@@ -191,7 +192,7 @@ mi_startup(void)
         sysinit = temp;
         sysinit_end = (struct sysinit **)(((uint8_t *)sysinit) + size);
     }
-
+    printf("after sysinit\n");
 restart:
     /*
      * Perform a bubble sort of the system initialization objects by

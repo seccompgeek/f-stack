@@ -162,7 +162,7 @@ ff_freebsd_init(void)
     uma_page_mask = num_hash_buckets - 1;
     printf("after buckets\n");
     mutex_init();
-    printf("nutex initialized\n");
+    printf("mutex initialized\n");
     mi_startup();
     printf("after start \n");
     sx_init(&proctree_lock, "proctree");
