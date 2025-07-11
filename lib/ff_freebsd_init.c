@@ -165,7 +165,7 @@ ff_freebsd_init(void)
     mi_startup();
     sx_init(&proctree_lock, "proctree");
     ff_fdused_range(ff_global_cfg.freebsd.fd_reserve);
-
+    printf("before loop\n");
     cur = ff_global_cfg.freebsd.sysctl;
     while (cur) {
         error = kernel_sysctlbyname(curthread, cur->name, NULL, NULL,
@@ -178,7 +178,7 @@ ff_freebsd_init(void)
 
         cur = cur->next;
     }
-
+    printf("after loop\n");
     error = lo_set_defaultaddr();
     if(error != 0)
         printf("set loopback port default addr failed!");
