@@ -102,7 +102,7 @@ int    bootverbose;
 SYSCTL_INT(_debug, OID_AUTO, bootverbose, CTLFLAG_RW, &bootverbose, 0, "");
 #endif
 
-//#define VERBOSE_SYSINIT
+#define VERBOSE_SYSINIT
 
 
 /*
@@ -255,9 +255,10 @@ restart:
                     (*sipp)->udata);
         }
 #endif
-
+        printf("Calling bad function\n");
         /* Call function */
         (*((*sipp)->func))((*sipp)->udata);
+        printf("Bad function returned\n");
 
 #ifdef VERBOSE_SYSINIT
         if (verbose)
