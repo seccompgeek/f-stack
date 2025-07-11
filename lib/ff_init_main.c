@@ -86,7 +86,6 @@ __FBSDID("$FreeBSD$");
 
 #include <ddb/ddb.h>
 #include <ddb/db_sym.h>
-#include <stdio.h>
 
 void mi_startup(void); /* Should be elsewhere */
 
