@@ -164,7 +164,7 @@ ff_freebsd_init(void)
     mutex_init();
     printf("nutex initialized\n");
     mi_startup();
-    printf("after start ")
+    printf("after start \n");
     sx_init(&proctree_lock, "proctree");
     ff_fdused_range(ff_global_cfg.freebsd.fd_reserve);
     printf("before loop\n");
